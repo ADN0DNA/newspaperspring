@@ -79,6 +79,7 @@ public class ReaderService {
             List <String> newspaperNames = new ArrayList<>();
 
             List<NewspaperEntity> newspaperEntities = newspaperRepository.getAllByReader(readArticle.getIdReader());
+            //TODO subscription is empty! insert some data
 
             newspaperEntities.forEach(newspaper -> {
                 newspaperNames.add(newspaper.getName());
