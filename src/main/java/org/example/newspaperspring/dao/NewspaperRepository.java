@@ -16,4 +16,6 @@ public interface NewspaperRepository {
     void update(NewspaperEntity newspaper);
 
     void delete(NewspaperEntity newspaper);
+
+    List<NewspaperEntity> getAllByReader(int readerId);
 }

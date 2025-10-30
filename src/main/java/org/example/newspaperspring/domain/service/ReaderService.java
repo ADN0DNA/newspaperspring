@@ -1,15 +1,19 @@
 package org.example.newspaperspring.domain.service;
 
+import org.example.newspaperspring.dao.NewspaperRepository;
 import org.example.newspaperspring.dao.ReadArticleRepository;
 import org.example.newspaperspring.dao.ReaderRepository;
 import org.example.newspaperspring.dao.jdbc.jdbcReaderRepository;
+import org.example.newspaperspring.dao.model.NewspaperEntity;
 import org.example.newspaperspring.dao.model.ReadArticleEntity;
 import org.example.newspaperspring.dao.model.ReaderEntity;
+import org.example.newspaperspring.domain.mappers.ReadArticleMapperService;
 import org.example.newspaperspring.domain.mappers.ReaderMapperService;
 import org.example.newspaperspring.domain.model.ReadArticleDTO;
 import org.example.newspaperspring.domain.model.ReaderDTO;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -19,12 +23,16 @@ public class ReaderService {
     private final jdbcReaderRepository jdbcReaderRepository;
     private final ReaderMapperService readerMapperService;
     private final ReadArticleRepository readArticleRepository;
+    private final ReadArticleMapperService readArticleMapperService;
+    private final NewspaperRepository newspaperRepository;
 
-    public ReaderService(ReaderRepository readerRepository, jdbcReaderRepository jdbcReaderRepository, ReaderMapperService readerMapperService, ReadArticleRepository readArticleRepository) {
+    public ReaderService(ReaderRepository readerRepository, jdbcReaderRepository jdbcReaderRepository, ReaderMapperService readerMapperService, ReadArticleRepository readArticleRepository, ReadArticleMapperService readArticleMapperService, NewspaperRepository newspaperRepository) {
         this.readerRepository = readerRepository;
         this.jdbcReaderRepository = jdbcReaderRepository;
         this.readerMapperService = readerMapperService;
         this.readArticleRepository = readArticleRepository;
+        this.readArticleMapperService = readArticleMapperService;
+        this.newspaperRepository = newspaperRepository;
     }
 
     public List<ReaderDTO> getAllReaders() {
@@ -58,22 +66,32 @@ public class ReaderService {
     }
 
     public List<ReadArticleDTO> getAllReadersByArticleId(int articleId) {
-        List<ReaderEntity> readers = readerRepository.getAll();
-        List<ReadArticleEntity> readArticles = readArticleRepository.getAll();
-        List<ReaderDTO> articleReaders = null;
-        for (ReadArticleEntity readArticle : readArticles) {
-            if (readArticle.getArticleId() == articleId) {
-                for (ReaderEntity reader : readers) {
-                    if (reader.getId() == readArticle.getReaderId()) {
-                        articleReaders.add(readerMapperService.mapToDTO(reader));
-                    }
-                }
-            }
+
+        List <ReadArticleDTO> readArticleDTOS = readArticleMapperService.mapToDTOs(readArticleRepository.getAllByArticleId(articleId));
+
+        for (ReadArticleDTO readArticle : readArticleDTOS) {
+
+            ReaderEntity reader = readerRepository.get(readArticle.getIdReader());
+
+                readArticle.setNameReader(reader.getName());
+                readArticle.setDobReader(reader.getDob());
+
+            List <String> newspaperNames = new ArrayList<>();
+
+            List<NewspaperEntity> newspaperEntities = newspaperRepository.getAllByReader(readArticle.getIdReader());
+
+            newspaperEntities.forEach(newspaper -> {
+                newspaperNames.add(newspaper.getName());
+            });
+
+            readArticle.setRating(readArticleRepository.get(readArticle.getIdReader()).getRating());
+            readArticle.setSubscriptionsReader(newspaperNames);
+
 
         }
 
-        //return articleReaders;
-        System.out.println("DELETE LATER, IF THIS METHOD IS SUPPOSED TO RETURN ALL THE READERS OF AN ARTICLE, WHY IS IT RETURNING List<ReadArticleDTO> THOSE ARE NOT THE READERS");
-        return null;
+
+        return readArticleDTOS;
+
     }
 }

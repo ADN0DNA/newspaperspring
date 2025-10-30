@@ -64,4 +64,18 @@ public class jdbcNewspaperRepository implements NewspaperRepository {
     public void delete(NewspaperEntity newspaper) {
 
     }
+
+    @Override
+    public List<NewspaperEntity> getAllByReader(int readerId) {
+        try (Connection con = dbConnectionPool.getConnection();
+             var stmt = con.prepareStatement(SQLQueries.SELECT_NEWSPAPERS_BY_READER_QUERY)) {
+            stmt.setInt(1, readerId);
+            ResultSet rs = stmt.executeQuery();
+            return newspaperMapperDao.mapNewspapers(rs);
+        } catch (SQLException e) {
+            throw new DatabaseError(e.getMessage());
+        } catch (Exception e) {
+            throw new AppError(e.getMessage());
+        }
+    }
 }

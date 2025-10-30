@@ -1,7 +1,7 @@
 package org.example.newspaperspring.dao.utils;
 
 import jakarta.inject.Inject;
-import org.example.newspaperjsclass.common.Configuration;
+import org.example.newspaperspring.common.Configuration;
 
 import java.sql.*;
 

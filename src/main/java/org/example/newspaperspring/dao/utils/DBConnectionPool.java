@@ -3,7 +3,7 @@ package org.example.newspaperspring.dao.utils;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import jakarta.annotation.PreDestroy;
-import org.example.newspaperjsclass.common.Configuration;
+import org.example.newspaperspring.common.Configuration;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;

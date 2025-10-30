@@ -1,7 +1,5 @@
 package org.example.newspaperspring.dao.mappers.jdbc_mappers;
 
-
-
 import org.example.newspaperspring.dao.model.ArticleEntity;
 import org.example.newspaperspring.dao.model.TypeEntity;
 import org.springframework.stereotype.Repository;

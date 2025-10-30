@@ -44,7 +44,16 @@ public class jdbcReadArticleRepository implements ReadArticleRepository {
 
     @Override
     public ReadArticleEntity get(int id) {
-        return null;
+        try (Connection con = dbConnectionPool.getConnection();
+             PreparedStatement preparedStatement = con.prepareStatement(SQLQueries.SELECT_READARTICLE_BY_ID_QUERY)) {
+            preparedStatement.setInt(1, id);
+
+            ResultSet rs = preparedStatement.executeQuery();
+            return readArticleMapperDao.mapReadArticle(rs);
+
+        } catch (SQLException e) {
+            throw new DatabaseError(e.getMessage());
+        }
     }
 
     @Override
@@ -117,6 +126,20 @@ public class jdbcReadArticleRepository implements ReadArticleRepository {
              PreparedStatement preparedStatement = con.prepareStatement(SQLQueries.DELETE_READARTICLE_BY_ARTICLE_ID_QUERY)) {
             preparedStatement.setInt(1, articleId);
             preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new DatabaseError(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<ReadArticleEntity> getAllByArticleId(int articleId) {
+        try (Connection con = dbConnectionPool.getConnection();
+             PreparedStatement preparedStatement = con.prepareStatement(SQLQueries.SELECT_READARTICLE_BY_ARTICLE_ID_QUERY)) {
+            preparedStatement.setInt(1,articleId);
+
+            ResultSet rs = preparedStatement.executeQuery();
+            return readArticleMapperDao.mapReadArticles(rs);
 
         } catch (SQLException e) {
             throw new DatabaseError(e.getMessage());

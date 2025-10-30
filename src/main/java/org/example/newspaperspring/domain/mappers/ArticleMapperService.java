@@ -33,7 +33,7 @@ public class ArticleMapperService {
                 article.getName(),
                 typeDTO,
                 article.getNPaperId(),
-                0 // Placeholder for avg rating
+                0 // TODO remove placeholder for avg rating
         );
     }
 

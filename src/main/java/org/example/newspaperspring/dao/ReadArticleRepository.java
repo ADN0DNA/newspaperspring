@@ -19,4 +19,6 @@ public interface ReadArticleRepository {
     void delete(ReadArticleEntity readArticle);
 
     void deleteByArticleId(int articleId);
+
+    List <ReadArticleEntity> getAllByArticleId(int articleId);
 }

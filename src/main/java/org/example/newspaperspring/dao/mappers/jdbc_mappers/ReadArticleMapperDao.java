@@ -22,4 +22,16 @@ public class ReadArticleMapperDao {
         }
         return list;
     }
+
+    public ReadArticleEntity mapReadArticle(ResultSet rs) throws SQLException {
+        if (rs.next()) {
+            ReadArticleEntity readArticle = new ReadArticleEntity();
+            readArticle.setId(rs.getInt("id"));
+            readArticle.setArticleId(rs.getInt("article_id"));
+            readArticle.setReaderId(rs.getInt("reader_id"));
+            readArticle.setRating(rs.getInt("rating"));
+            return readArticle;
+        }
+        return null;
+    }
 }
