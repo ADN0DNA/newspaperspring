@@ -24,7 +24,7 @@ public class SQLQueries {
     // INSERT queries
     public static final String INSERT_ARTICLE_QUERY = "insert into article (name, type_id, newspaper_id) values(?,?,?)";
     public static final String INSERT_NEWSPAPER_QUERY = "insert into newspaper values(?,?,?)";
-    public static final String INSERT_READARTICLE_QUERY = "insert into readarticle values(?,?,?)";
+    public static final String INSERT_READARTICLE_QUERY = "insert into readarticle (article_id, reader_id, rating) values(?,?,?)";
     public static final String INSERT_READER_QUERY = "insert into reader(name,dob) values(?,?)";
     public static final String INSERT_READER_CREDENTIALS_QUERY = "insert into credential values(?,?,?)";
     public static final String INSERT_READER_VALUES_QUERY = "insert into reader values(?,?,?,?)";

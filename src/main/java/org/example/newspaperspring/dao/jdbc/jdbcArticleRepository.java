@@ -66,7 +66,6 @@ public class jdbcArticleRepository implements ArticleRepository {
     public int save(ArticleEntity article) {
         try (Connection con = dbConnectionPool.getConnection();
              PreparedStatement pstmt = con.prepareStatement(SQLQueries.INSERT_ARTICLE_QUERY, Statement.RETURN_GENERATED_KEYS)) {
-            // Assuming the order: name, type_id, newspaper_id, rating
             pstmt.setString(1, article.getName());
             pstmt.setInt(2, article.getType().getId());
             pstmt.setInt(3, article.getNPaperId());

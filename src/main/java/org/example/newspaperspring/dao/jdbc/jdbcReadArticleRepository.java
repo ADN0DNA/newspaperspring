@@ -58,20 +58,15 @@ public class jdbcReadArticleRepository implements ReadArticleRepository {
 
     @Override
     public int save(ReadArticleEntity readArticle) {
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
+        try (Connection con = dbConnectionPool.getConnection();
+             PreparedStatement preparedStatement = con.prepareStatement(SQLQueries.INSERT_READARTICLE_QUERY, Statement.RETURN_GENERATED_KEYS)) {
 
-        try {
-            conn = dbConnectionPool.getConnection();
-            pstmt = conn.prepareStatement(SQLQueries.INSERT_READARTICLE_QUERY);
-            // Assuming the order: articleId, readerId, rating
-            pstmt.setInt(1, readArticle.getArticleId());
-            pstmt.setInt(2, readArticle.getReaderId());
-            pstmt.setInt(3, readArticle.getRating());
-            pstmt.executeUpdate();
+            preparedStatement.setInt(1, readArticle.getArticleId());
+            preparedStatement.setInt(2, readArticle.getReaderId());
+            preparedStatement.setInt(3, readArticle.getRating());
+            preparedStatement.executeUpdate();
 
-            rs = pstmt.getGeneratedKeys();
+            ResultSet rs = preparedStatement.getGeneratedKeys();
             if (rs != null && rs.next()) {
                 int generatedId = rs.getInt(1);
                 readArticle.setId(generatedId);
@@ -81,12 +76,7 @@ public class jdbcReadArticleRepository implements ReadArticleRepository {
             }
         } catch (SQLException e) {
             throw new DatabaseError(e.getMessage());
-        } catch (Exception e) {
-            throw new AppError(e.getMessage());
-        } finally {
-            dbConnectionPool.releaseResource(rs);
-            dbConnectionPool.releaseResource(pstmt);
-            dbConnectionPool.closeConnection(conn);
+
         }
     }
 

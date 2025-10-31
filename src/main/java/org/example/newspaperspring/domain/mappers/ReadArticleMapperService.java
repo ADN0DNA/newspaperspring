@@ -28,4 +28,12 @@ public class ReadArticleMapperService {
 
         return dto;
     }
+
+    public ReadArticleEntity mapToEntity(ReadArticleDTO readArticleDTO) {
+        ReadArticleEntity entity = new ReadArticleEntity();
+        entity.setArticleId(readArticleDTO.getIdArticle());
+        entity.setReaderId(readArticleDTO.getIdReader());
+        entity.setRating(readArticleDTO.getRating());
+        return entity;
+    }
 }

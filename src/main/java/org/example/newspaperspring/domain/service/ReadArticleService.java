@@ -4,6 +4,7 @@ import org.example.newspaperspring.dao.ReadArticleRepository;
 import org.example.newspaperspring.dao.ReaderRepository;
 import org.example.newspaperspring.dao.model.ReadArticleEntity;
 import org.example.newspaperspring.dao.model.ReaderEntity;
+import org.example.newspaperspring.domain.mappers.ReadArticleMapperService;
 import org.example.newspaperspring.domain.model.ReadArticleDTO;
 import org.example.newspaperspring.domain.model.ReaderDTO;
 import org.springframework.stereotype.Service;
@@ -15,10 +16,12 @@ import java.util.List;
 public class ReadArticleService {
     private final ReadArticleRepository readArticleRepository;
     private final ReaderRepository readerRepository;
+    private final ReadArticleMapperService readArticleMapperService;
 
-    public ReadArticleService(ReadArticleRepository readArticleRepository, ReaderRepository readerRepository) {
+    public ReadArticleService(ReadArticleRepository readArticleRepository, ReaderRepository readerRepository, ReadArticleMapperService readArticleMapperService) {
         this.readArticleRepository = readArticleRepository;
         this.readerRepository = readerRepository;
+        this.readArticleMapperService = readArticleMapperService;
     }
 
     public void deleteByArticleId(int i) {
@@ -106,7 +109,10 @@ public class ReadArticleService {
     }
 
     public int addReadArticle(ReadArticleDTO readArticleDTO) {
-        return 0; //TODO mapper
+        ReadArticleEntity entity = readArticleMapperService.mapToEntity(readArticleDTO);
+
+        readArticleRepository.save(entity);
+        return entity.getId();
     }
 
     public boolean delete(ReadArticleDTO readArticleDTO) {
