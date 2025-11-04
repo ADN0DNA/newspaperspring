@@ -102,7 +102,8 @@ public class jdbcReadArticleRepository implements ReadArticleRepository {
     public void delete(ReadArticleEntity readArticle) {
         try (Connection con = dbConnectionPool.getConnection();
              PreparedStatement preparedStatement = con.prepareStatement(SQLQueries.DELETE_READARTICLE_QUERY)) {
-            preparedStatement.setInt(1, readArticle.getId());
+            preparedStatement.setInt(1, readArticle.getReaderId());
+            preparedStatement.setInt(2, readArticle.getArticleId());
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {

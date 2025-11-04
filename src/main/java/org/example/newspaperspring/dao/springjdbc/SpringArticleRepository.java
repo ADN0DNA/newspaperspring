@@ -5,6 +5,7 @@ import org.example.newspaperspring.dao.ReadArticleRepository;
 import org.example.newspaperspring.dao.model.ArticleEntity;
 import org.example.newspaperspring.dao.mappers.spring_mappers.ArticleRowMapper;
 import org.example.newspaperspring.dao.utils.SQLQueries;
+import org.example.newspaperspring.domain.error.AppError;
 import org.example.newspaperspring.domain.error.ForeignKeyError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -43,8 +44,8 @@ public class SpringArticleRepository implements ArticleRepository {
     public ArticleEntity get(int id) {
         return jdbcClient.sql(SQLQueries.SELECT_ARTICLE_BY_ID_QUERY)
                 .param(1, id)
-                .query(articleRowMapper).single();
-        //TODO see what the keyholder is used for. Is this correct?^^
+                .query(articleRowMapper).optional()
+                .orElseThrow(() -> new AppError("Article not found: " + id));
     }
 
     @Override
@@ -53,7 +54,7 @@ public class SpringArticleRepository implements ArticleRepository {
             KeyHolder keyHolder = new GeneratedKeyHolder();
             jdbcClient.sql(SQLQueries.INSERT_ARTICLE_QUERY)
                     .param(1, article.getName())
-                    .param(2, article.getType())
+                    .param(2, article.getType().getId())
                     .param(3, article.getNPaperId())
                     .update(keyHolder);
             return Objects.requireNonNull(keyHolder.getKey(), "Key was not generated").intValue();
@@ -64,8 +65,9 @@ public class SpringArticleRepository implements ArticleRepository {
     public void update(ArticleEntity article) {
         jdbcClient.sql(SQLQueries.UPDATE_ARTICLE_QUERY)
                 .param(1, article.getName())
-                .param(2, article.getType())
+                .param(2, article.getType().getId())
                 .param(3, article.getNPaperId())
+                .param(4, article.getId())
                 .update();
     }
 

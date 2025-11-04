@@ -20,15 +20,13 @@ import java.util.List;
 public class ReaderService {
 
     private final ReaderRepository readerRepository;
-    private final jdbcReaderRepository jdbcReaderRepository;
     private final ReaderMapperService readerMapperService;
     private final ReadArticleRepository readArticleRepository;
     private final ReadArticleMapperService readArticleMapperService;
     private final NewspaperRepository newspaperRepository;
 
-    public ReaderService(ReaderRepository readerRepository, jdbcReaderRepository jdbcReaderRepository, ReaderMapperService readerMapperService, ReadArticleRepository readArticleRepository, ReadArticleMapperService readArticleMapperService, NewspaperRepository newspaperRepository) {
+    public ReaderService(ReaderRepository readerRepository, ReaderMapperService readerMapperService, ReadArticleRepository readArticleRepository, ReadArticleMapperService readArticleMapperService, NewspaperRepository newspaperRepository) {
         this.readerRepository = readerRepository;
-        this.jdbcReaderRepository = jdbcReaderRepository;
         this.readerMapperService = readerMapperService;
         this.readArticleRepository = readArticleRepository;
         this.readArticleMapperService = readArticleMapperService;
@@ -46,13 +44,13 @@ public class ReaderService {
     }
 
     public void addCredentials(String username, String password, int readerId) {
-        jdbcReaderRepository.saveCredentials(username, password, readerId);
+        readerRepository.saveCredentials(username, password, readerId);
     }
 
     public void deleteReader(int readerId, boolean deleteCredentials) {
         ReaderEntity reader = readerRepository.get(readerId);
         if (deleteCredentials) {
-            jdbcReaderRepository.deleteCredentialsByReaderId(readerId);
+            readerRepository.deleteCredentialsByReaderId(readerId);
         }
         readerRepository.delete(reader);
     }

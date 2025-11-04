@@ -24,8 +24,8 @@ public class ReadArticleService {
         this.readArticleMapperService = readArticleMapperService;
     }
 
-    public void deleteByArticleId(int i) {
-
+    public void deleteByArticleId(int articleId) {
+        readArticleRepository.deleteByArticleId(articleId);
     }
 
     public List<ReaderDTO> getReadersByArticleId(int articleId) {
@@ -99,13 +99,17 @@ public class ReadArticleService {
 
     public List<ReadArticleDTO> getAllReadArticles() {
         List<ReadArticleEntity> readArticles = readArticleRepository.getAll();
-        return null; //TODO: use mapper
+        List<ReadArticleDTO> result = new ArrayList<>();
+        for (ReadArticleEntity entity : readArticles) {
+            result.add(readArticleMapperService.mapToDTO(entity));
+        }
+        return result;
     }
 
     public ReadArticleDTO get(int id) {
         ReadArticleEntity entity = readArticleRepository.get(id);
         if (entity == null) return null;
-        return null; //TODO: use mapper
+        return readArticleMapperService.mapToDTO(entity);
     }
 
     public int addReadArticle(ReadArticleDTO readArticleDTO) {
@@ -116,10 +120,13 @@ public class ReadArticleService {
     }
 
     public boolean delete(ReadArticleDTO readArticleDTO) {
-        return false; //TODO mapper
+        ReadArticleEntity entity = readArticleMapperService.mapToEntity(readArticleDTO);
+        readArticleRepository.delete(entity);
+        return true;
     }
 
     public void update(ReadArticleDTO readArticleDTO) {
-
+        ReadArticleEntity entity = readArticleMapperService.mapToEntity(readArticleDTO);
+        readArticleRepository.update(entity);
     }
 }
