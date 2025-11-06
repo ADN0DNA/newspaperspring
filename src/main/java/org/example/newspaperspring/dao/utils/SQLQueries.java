@@ -8,6 +8,8 @@ public class SQLQueries {
     // SELECT queries
     public static final String SELECT_ARTICLE_BY_ID_QUERY = "SELECT a.id, a.name, t.description,a.type_id, a.newspaper_id FROM article a INNER JOIN type t ON a.type_id = t.id WHERE a.id = ? GROUP BY a.id, a.name, a.type_id, a.newspaper_id";
     public static final String SELECT_ARTICLES_QUERY = "SELECT a.id, a.name, t.description,a.type_id, a.newspaper_id FROM article a INNER JOIN type t ON a.type_id = t.id";
+    // AVG rating query para all articles
+    public static final String SELECT_AVERAGE_RATING_BY_ARTICLE_ID_QUERY = "SELECT AVG(rating) FROM readarticle WHERE article_id = ?";
     public static final String SELECT_CREDENTIAL_BY_USERNAME_QUERY = "select * from credential where username = ?";
     public static final String SELECT_NEWSPAPER_BY_ID_QUERY = "select * from newspaper where id = ?";
     public static final String SELECT_NEWSPAPERS_QUERY = "select * from newspaper";
@@ -43,6 +45,7 @@ public class SQLQueries {
     public static final String DELETE_READARTICLE_BY_ARTICLE_ID_QUERY = "delete from readarticle where article_id = ?";
     public static final String DELETE_READER_QUERY = "delete from reader where id = ?";
     public static final String DELETE_READER_CREDENTIALS_BY_READER_ID_QUERY = "delete from credential where reader_id = ?";
+
 
 
 }

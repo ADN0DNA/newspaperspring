@@ -130,5 +130,11 @@ public class jdbcArticleRepository implements ArticleRepository {
         }
     }
 
+    @Override
+    public double getAverageRating(int articleId) {
+        System.out.println("WAS USING SPRING SO THIS METHOD IS NOT IMPLEMENTED");
+        return 0;
+    }
+
 
 }

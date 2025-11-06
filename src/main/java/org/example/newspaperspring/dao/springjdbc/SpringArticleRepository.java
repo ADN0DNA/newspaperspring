@@ -85,4 +85,15 @@ public class SpringArticleRepository implements ArticleRepository {
         }
 
     }
+
+    @Override
+    public double getAverageRating(int articleId) {
+        Double average = jdbcClient.sql(SQLQueries.SELECT_AVERAGE_RATING_BY_ARTICLE_ID_QUERY)
+                .param(1, articleId)
+                .query(Double.class)
+                .optional()
+                .orElse(0.0);
+        return Math.round(average * 100.0) / 100.0;
+    }
+
 }

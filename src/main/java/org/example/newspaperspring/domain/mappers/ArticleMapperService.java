@@ -12,15 +12,15 @@ import java.util.List;
 @Service
 public class ArticleMapperService {
 
-    public List<ArticleDTO> mapToDTOs(List<ArticleEntity> articles) {
+    public List<ArticleDTO> mapToDTOs(List<ArticleEntity> articles, List<Double> avgRatings) {
         List<ArticleDTO> articleDTOs = new ArrayList<>();
-        for (ArticleEntity article : articles) {
-            articleDTOs.add(mapToDTO(article));
+        for (int i = 0; i < articles.size(); i++) {
+            articleDTOs.add(mapToDTO(articles.get(i), avgRatings.get(i)));
         }
         return articleDTOs;
     }
 
-    public ArticleDTO mapToDTO(ArticleEntity article) {
+    public ArticleDTO mapToDTO(ArticleEntity article, double avgRating) {
         TypeDTO typeDTO = null;
         if (article.getType() != null) {
             typeDTO = new TypeDTO(
@@ -33,7 +33,7 @@ public class ArticleMapperService {
                 article.getName(),
                 typeDTO,
                 article.getNPaperId(),
-                0 // TODO remove placeholder for avg rating
+                avgRating
         );
     }
 

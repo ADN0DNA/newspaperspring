@@ -9,6 +9,7 @@ import org.example.newspaperspring.domain.model.ArticleDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,8 +26,24 @@ public class ArticleService {
 
     public List<ArticleDTO> getAllArticles() {
         List<ArticleEntity> articles = articleRepository.getAll();
-        return articleMapperService.mapToDTOs(articles);
+        List<Double> avgRatings = new ArrayList<>();
+
+        for (ArticleEntity article : articles) {
+            avgRatings.add(articleRepository.getAverageRating(article.getId()));
+        }
+
+        return articleMapperService.mapToDTOs(articles, avgRatings);
     }
+
+    public ArticleDTO get(int id) {
+        ArticleEntity article = articleRepository.get(id);
+        if (article == null) {
+            throw new AppError("Article not found with id: " + id);
+        }
+        double avgRating = articleRepository.getAverageRating(id);
+        return articleMapperService.mapToDTO(article, avgRating);
+    }
+
 
     public int add(ArticleDTO articleDTO) {
         ArticleEntity article = articleMapperService.mapToEntity(articleDTO);
@@ -37,14 +54,6 @@ public class ArticleService {
     public void update(ArticleDTO articleDTO) {
         ArticleEntity article = articleMapperService.mapToEntity(articleDTO);
         articleRepository.update(article);
-    }
-
-    public ArticleDTO get(int id) {
-        ArticleEntity article = articleRepository.get(id);
-        if (article == null) {
-            throw new AppError("Article not found with id: " + id);
-        }
-        return articleMapperService.mapToDTO(article);
     }
 
     public void deleteArticle(int i, boolean b) {

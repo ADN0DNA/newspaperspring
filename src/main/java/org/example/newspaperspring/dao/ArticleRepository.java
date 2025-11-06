@@ -18,4 +18,7 @@ public interface ArticleRepository {
 
     void delete(int id, boolean confirmation);
 
+    double getAverageRating(int articleId);
+
+
 }
